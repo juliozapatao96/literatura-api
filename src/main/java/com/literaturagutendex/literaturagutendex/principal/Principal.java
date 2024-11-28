@@ -1,5 +1,6 @@
 package com.literaturagutendex.literaturagutendex.principal;
 
+import com.literaturagutendex.literaturagutendex.model.AllData;
 import com.literaturagutendex.literaturagutendex.model.BooksData;
 import com.literaturagutendex.literaturagutendex.service.ConsumeAPI;
 import com.literaturagutendex.literaturagutendex.service.ConvertData;
@@ -29,7 +30,9 @@ public class Principal {
                     System.out.println("Llamando a la API...");
                     var json = consumeApi.getData(BASE_URL);
                     System.out.println(json);
-                    BooksData data = converter.getData(json, BooksData.class);
+                    AllData data = converter.getData(json, AllData.class);
+                    System.out.println(data);
+
                     System.out.println(data);
                 }
                 case 0 -> System.out.println("Cerrando la aplicación...");

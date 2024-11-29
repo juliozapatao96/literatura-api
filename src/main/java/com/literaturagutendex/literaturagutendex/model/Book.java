@@ -10,7 +10,7 @@ public class Book {
     private List<String> languages;
     private Integer downloadCount;
 
-    public Book(){}
+    public Book(){} // Constructor requerido por JPA
 
     public Book(BooksData booksData){
         this.title = booksData.title();
@@ -53,6 +53,8 @@ public class Book {
 
     @Override
     public String toString() {
-        return super.toString(); // PENDIENTE MODIFICAR
+        return
+                "Titulo= "+ title + ", Autores= "+authors+
+                ", Lenguajes= "+languages+ ", Descargas= "+downloadCount;
     }
 }

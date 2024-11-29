@@ -6,8 +6,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+
 public class ConsumeAPI {
-    public String getData(String url) {
+    public ApiResponse getData(String url) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -15,18 +16,19 @@ public class ConsumeAPI {
                 .build();
 
         try {
-            System.out.println("Enviando solicitud a: " + url);
+            //System.out.println("Enviando solicitud a: " + url);
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Código de respuesta: " + response.statusCode());
-            System.out.println("Respuesta: " + response.body());
-            if (response.statusCode() == 200) {
-                return response.body();
+
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                return new ApiResponse(true, response.body(), null);
             } else {
-                return "Error: Código de respuesta " + response.statusCode();
+                return new ApiResponse(false, null, "Error: Código de respuesta " + response.statusCode());
             }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            return "Error: " + e.getMessage();
+        } catch (IOException e) {
+            return new ApiResponse(false, null, "Error de red o I/O: " + e.getMessage());
+        } catch (InterruptedException e){
+            Thread.currentThread().interrupt();
+            return new ApiResponse(false, null, "Error: operación interrumpida");
         }
     }
 

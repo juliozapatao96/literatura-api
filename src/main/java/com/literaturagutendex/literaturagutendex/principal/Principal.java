@@ -20,12 +20,18 @@ public class Principal {
 
     public void showMenu() {
         int opcion = -1;
+        var menu = """
+            \n################ Menu de opciones ################
+            
+            1 - Obtener lista de libros
+            2 - Buscar libro por título
+            0 - Salir
+            
+            ##################################################
+            """;
         while (opcion != 0) {
-            var menu = """
-                    1 - Obtener lista de libros
-                    2 - Buscar libro por título
-                    0 - Salir
-                    """;
+
+
             System.out.println(menu);
             opcion = keyboard.nextInt();
             keyboard.nextLine();
@@ -37,7 +43,8 @@ public class Principal {
                         AllData data = converter.getData(response.getData(), AllData.class);
                         System.out.println(data);
                     } else {
-                        System.err.println("Error al consultar la API: " + response.getErrorMessage());
+                        System.err.println("Error al consultar la API: " + response.getErrorMessage()
+                                +". Por favor, verifica la información ingresada e intenta nuevamente");
                     }
 
                 }
@@ -53,7 +60,8 @@ public class Principal {
                         Author author = new Author(book.getAuthors().getFirst());
                         System.out.println(author);
                     } else {
-                        System.err.println("Error al consultar la API: " + response.getErrorMessage());
+                        System.err.println("Error al consultar la API: " + response.getErrorMessage()
+                                +". Por favor, verifica la información ingresada e intenta nuevamente");
                     }
                 }
                 case 0 -> System.out.println("Cerrando la aplicación...");

@@ -1,22 +1,39 @@
 package com.literaturagutendex.literaturagutendex.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import jakarta.persistence.*;
 
 import java.util.List;
 
+@Entity
+@Table(name = "books")
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
+    @Column(unique = true)
     private String title;
-    private List<AuthorsData> authors;
-    private List<String> languages;
+    private String language;
     private Integer downloadCount;
+    //@Transient // Anotación que sirve para ignorar las relaciones por el momento
+    @ManyToOne
+    private Author author;
 
     public Book(){} // Constructor requerido por JPA
 
     public Book(BooksData booksData){
         this.title = booksData.title();
-        this.authors = booksData.authors();
-        this.languages = booksData.languages();
+        //this.author = booksData.authors().getFirst();
+        this.language = booksData.languages().getFirst();
         this.downloadCount = booksData.downloadCount();
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
     }
 
     public String getTitle() {
@@ -27,21 +44,17 @@ public class Book {
         this.title = title;
     }
 
-    public List<AuthorsData> getAuthors() {
-        return authors;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setAuthors(List<AuthorsData> authors) {
-        this.authors = authors;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
-    public List<String> getLanguages() {
-        return languages;
-    }
+    public String getLanguage() { return language; }
 
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
+    public void setLanguage(String language) { this.language = language; }
 
     public Integer getDownloadCount() {
         return downloadCount;
@@ -54,7 +67,7 @@ public class Book {
     @Override
     public String toString() {
         return
-                "Titulo= "+ title + ", Autores= "+authors+
-                ", Lenguajes= "+languages+ ", Descargas= "+downloadCount;
+                "Titulo= "+ title + ", Autores= "+author+
+                ", Lenguaje= "+language+ ", Descargas= "+downloadCount;
     }
 }

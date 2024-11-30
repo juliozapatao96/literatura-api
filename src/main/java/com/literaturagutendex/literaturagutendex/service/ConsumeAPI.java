@@ -16,7 +16,7 @@ public class ConsumeAPI {
                 .build();
 
         try {
-            //System.out.println("Enviando solicitud a: " + url);
+            System.out.println("Enviando solicitud a: " + url);
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() >= 200 && response.statusCode() < 300) {

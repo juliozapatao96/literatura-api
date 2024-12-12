@@ -19,6 +19,7 @@ public class Author {
     //@Transient
     private List<Book> books;
 
+
     public Author(){}
 
     public Author(AuthorsData authorsData){
@@ -58,6 +59,7 @@ public class Author {
     public void setDeathYear(Integer deathYear) {
         this.deathYear = deathYear;
     }
+
 
     public List<Book> getBooks() {
         return books;

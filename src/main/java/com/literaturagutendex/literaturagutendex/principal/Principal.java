@@ -1,8 +1,10 @@
 package com.literaturagutendex.literaturagutendex.principal;
 
 import com.literaturagutendex.literaturagutendex.model.AllData;
+import com.literaturagutendex.literaturagutendex.model.Author;
 import com.literaturagutendex.literaturagutendex.model.Book;
 import com.literaturagutendex.literaturagutendex.model.BooksData;
+import com.literaturagutendex.literaturagutendex.repository.AuthorRepository;
 import com.literaturagutendex.literaturagutendex.repository.BookRepository;
 import com.literaturagutendex.literaturagutendex.service.ApiResponse;
 import com.literaturagutendex.literaturagutendex.service.ConsumeAPI;
@@ -11,6 +13,7 @@ import com.literaturagutendex.literaturagutendex.service.ConvertData;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
@@ -20,11 +23,13 @@ public class Principal {
     private ConvertData converter = new ConvertData();
     private final String BASE_URL = "https://gutendex.com/books/";
     private BookRepository bookRepository;
+    private AuthorRepository authorRepository;
 
     private List<Book> books;
 
-    public Principal(BookRepository repository) {
-        this.bookRepository = repository;
+    public Principal(BookRepository bookRepository, AuthorRepository authorRepository) {
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
     }
 
     public void showMenu() {
@@ -84,12 +89,36 @@ public class Principal {
         return null;
     }
 
-    private void searchBookByTitle(){
+
+
+    private void searchBookByTitle() {
         AllData allData = getBookData();
-        if (!allData.books().isEmpty()){
+        if (!allData.books().isEmpty()) {
             Book book = new Book(allData.books().getFirst());
-            System.out.println("El libro encontrado es: "+book);
-            bookRepository.save(book);
+
+            //verifica si el libro ya existe en la bases de datos
+            Optional<Book> optionalBook = bookRepository.findByTitleContainsIgnoreCase(book.getTitle());
+
+            if (!optionalBook.isPresent()) {
+                Author author = book.getAuthorTemp();
+
+                // Verifica si el autor ya existe en la base de datos
+                Optional<Author> optionalAuthor = authorRepository.findByNameContainsIgnoreCase(author.getName());
+                if (!optionalAuthor.isPresent()) {
+                    authorRepository.save(author);
+                } else {
+                    // obtiene el autor que ya está en la base de datos
+                    author = optionalAuthor.get();
+                }
+
+                // Asocia el autor al libro
+                book.setAuthor(author);
+
+                // Guarda el libro
+                bookRepository.save(book);
+            }
+            System.out.println("El libro encontrado es: " + book);
+
         } else {
             System.err.println("No se encontró un libro con el título ingresado. Por favor, verifica la información ingresada e intenta nuevamente.");
         }

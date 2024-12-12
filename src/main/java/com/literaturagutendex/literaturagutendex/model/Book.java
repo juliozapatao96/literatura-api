@@ -18,14 +18,24 @@ public class Book {
     //@Transient // Anotación que sirve para ignorar las relaciones por el momento
     @ManyToOne
     private Author author;
+    @Transient
+    private Author authorTemp;
 
     public Book(){} // Constructor requerido por JPA
 
     public Book(BooksData booksData){
         this.title = booksData.title();
-        //this.author = booksData.authors().getFirst();
+        this.authorTemp = new Author(booksData.authors().getFirst());
         this.language = booksData.languages().getFirst();
         this.downloadCount = booksData.downloadCount();
+    }
+
+    public Author getAuthorTemp() {
+        return authorTemp;
+    }
+
+    public void setAuthorTemp(Author authorTemp) {
+        this.authorTemp = authorTemp;
     }
 
     public Long getId() {
@@ -67,7 +77,7 @@ public class Book {
     @Override
     public String toString() {
         return
-                "Titulo= "+ title + ", Autores= "+author+
+                "Titulo= "+ title + ", Autor= "+author.getName()+
                 ", Lenguaje= "+language+ ", Descargas= "+downloadCount;
     }
 }

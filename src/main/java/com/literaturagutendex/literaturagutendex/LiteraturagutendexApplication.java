@@ -1,6 +1,7 @@
 package com.literaturagutendex.literaturagutendex;
 
 import com.literaturagutendex.literaturagutendex.principal.Principal;
+import com.literaturagutendex.literaturagutendex.repository.AuthorRepository;
 import com.literaturagutendex.literaturagutendex.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -11,7 +12,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class LiteraturagutendexApplication implements CommandLineRunner {
 
 	@Autowired // Inyeccion de dependencias
-	private BookRepository repository;
+	private BookRepository bookRepository;
+
+	@Autowired
+	private AuthorRepository authorRepository;
 
 	public static void main(String[] args) {
 
@@ -21,7 +25,7 @@ public class LiteraturagutendexApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		Principal principal = new Principal(repository);
+		Principal principal = new Principal(bookRepository, authorRepository);
 
 		principal.showMenu();
 

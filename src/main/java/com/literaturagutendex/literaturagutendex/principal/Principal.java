@@ -12,6 +12,7 @@ import com.literaturagutendex.literaturagutendex.service.ConvertData;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -40,6 +41,8 @@ public class Principal {
             1 - Obtener lista de todos los libros
             2 - Buscar libro por título
             3 - Obtener lista de libros por lenguaje
+            4 - Obtener lista de todos los autores
+            5 - Obtener lista de autores vivos en el año ingresado
             0 - Salir
             
             ##################################################
@@ -62,6 +65,12 @@ public class Principal {
                 }
                 case 3 -> {
                     searchBooksByLanguage();
+                }
+                case 4 -> {
+                    showAllAuthors();
+                }
+                case 5 -> {
+                    showLivingAuthorsInCertainYear();
                 }
                 case 0 -> System.out.println("Cerrando la aplicación...");
                 default -> System.out.println("Opción inválida");
@@ -132,7 +141,7 @@ public class Principal {
         System.out.println("Ingrese el idioma para buscar libros: ");
         var languageSearch = keyboard.nextLine();
 
-        books = bookRepository.findByLanguage(languageSearch);
+        List<Book> books = bookRepository.findByLanguage(languageSearch);
 
         if (!books.isEmpty()){
             books.stream()
@@ -143,12 +152,43 @@ public class Principal {
 
     }
 
+    private void showLivingAuthorsInCertainYear() {
+        try {
+            System.out.println("Ingrese el año: ");
+            var year = keyboard.nextInt();
+
+            if (year > 0) {
+                List<Author> authors = authorRepository.authorsByYearTheyWereAlive(year);
+
+                if (!authors.isEmpty()){
+                    System.out.println("El/Los autor(es) que se encontraban vivos para el año "+year+" son: ");
+                    authors.stream()
+                            .forEach(System.out::println);
+                } else {
+                    System.out.println("No se encontraron autores vivos para el año "+year);
+                }
+            } else {
+                System.out.println("Por favor, ingresa un año válido (mayor a 0).");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Entrada inválida. Por favor, ingresa un número entero.");
+            keyboard.nextLine(); // Limpiar el buffer del scanner
+        }
+    }
+
     private void showAllBooks(){
         books = bookRepository.findAll();
 
         books.stream()
                 .forEach(System.out::println);
 
+    }
+
+    private void showAllAuthors(){
+        List<Author> authors = authorRepository.findAll();
+
+        authors.stream()
+                .forEach(System.out::println);
     }
 
 }

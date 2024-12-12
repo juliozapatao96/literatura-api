@@ -39,6 +39,7 @@ public class Principal {
             
             1 - Obtener lista de todos los libros
             2 - Buscar libro por título
+            3 - Obtener lista de libros por lenguaje
             0 - Salir
             
             ##################################################
@@ -58,6 +59,9 @@ public class Principal {
                 }
                 case 2 -> {
                     searchBookByTitle();
+                }
+                case 3 -> {
+                    searchBooksByLanguage();
                 }
                 case 0 -> System.out.println("Cerrando la aplicación...");
                 default -> System.out.println("Opción inválida");
@@ -122,6 +126,21 @@ public class Principal {
         } else {
             System.err.println("No se encontró un libro con el título ingresado. Por favor, verifica la información ingresada e intenta nuevamente.");
         }
+    }
+
+    private void searchBooksByLanguage(){
+        System.out.println("Ingrese el idioma para buscar libros: ");
+        var languageSearch = keyboard.nextLine();
+
+        books = bookRepository.findByLanguage(languageSearch);
+
+        if (!books.isEmpty()){
+            books.stream()
+                    .forEach(System.out::println);
+        } else {
+            System.out.println("No se encontraron libros con el lenguaje : "+languageSearch);
+        }
+
     }
 
     private void showAllBooks(){

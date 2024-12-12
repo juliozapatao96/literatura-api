@@ -17,4 +17,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 //    @Query("SELECT s FROM Serie s WHERE s.totalSeasons <= :totalSeasons AND s.evaluation >= :evaluation") // JPQL
 //    List<Serie> seriesBySeasonAndEvaluation(int totalSeasons, Double evaluation);
 
+    @Query("SELECT b.language, COUNT(b) FROM Book b GROUP BY b.language ORDER BY COUNT(b) DESC")
+    List<Object[]> countBooksByLanguage();
+
+
 }

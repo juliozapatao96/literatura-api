@@ -43,6 +43,7 @@ public class Principal {
             3 - Obtener lista de libros por lenguaje
             4 - Obtener lista de todos los autores
             5 - Obtener lista de autores vivos en el año ingresado
+            6 - Obtener conteo de libros por lenguaje
             0 - Salir
             
             ##################################################
@@ -71,6 +72,9 @@ public class Principal {
                 }
                 case 5 -> {
                     showLivingAuthorsInCertainYear();
+                }
+                case 6 -> {
+                    showBooksByLanguage();
                 }
                 case 0 -> System.out.println("Cerrando la aplicación...");
                 default -> System.out.println("Opción inválida");
@@ -174,6 +178,18 @@ public class Principal {
             System.out.println("Entrada inválida. Por favor, ingresa un número entero.");
             keyboard.nextLine(); // Limpiar el buffer del scanner
         }
+    }
+
+    private void showBooksByLanguage(){
+        List<Object[]> results = bookRepository.countBooksByLanguage();
+        if (!results.isEmpty()){
+            System.out.println("Cantidad de libros por lenguaje");
+            results.stream()
+                    .forEach(row -> System.out.println("Lenguaje: "+row[0] + " - Conteo: "+row[1]));
+        } else {
+            System.out.println("Todavía no se encuentran libros en la base de datos.");
+        }
+
     }
 
     private void showAllBooks(){
